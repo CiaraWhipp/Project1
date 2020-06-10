@@ -37,13 +37,20 @@ The following code creates the base url that can be used to read in data from th
 baseURL <- "https://records.nhl.com/site/api/"
 ```
 
-The following function can be used to access **franchise** data and **franchise-team-totals** data. 
+The following function can be used to access **franchise** data and **franchise-team-totals** data.
+
+```{r overall, echo=TRUE, eval=TRUE, message=FALSE}
+overallData <- function(x){
+  fullURL <- paste0(baseURL,x)
+  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
+}
+```
+
+The following function can be used to access **franchise-season-records**, **franchise-goalie-records**, and **franchise-skater-records** for a specified franchise ID. 
 
 ```{r franchise, echo=TRUE, eval=TRUE, message=FALSE}
-franchiseData <- function(x){
-  fullURL <- paste0(baseURL,x)
-  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble() %>% print(n=104)
+franchiseData <- function(x,ID){
+  fullURL <- paste0(baseURL,x,"?cayenneExp=franchiseId=",ID)
+  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
 }
-franchiseData(x="franchise")
-franchiseData(x="franchise-team-totals")
 ```
