@@ -37,13 +37,20 @@ The following code creates the base url that can be used to read in data from th
 baseURL <- "https://records.nhl.com/site/api/"
 ```
 
-The following function can be used to access **franchise** data and **franchise-team-totals** data.
+The following function can be used to access the **franchise** data and **franchise-team-totals** data. Both data sets can be found below
 
 ```{r overall, echo=TRUE, eval=TRUE, message=FALSE}
 overallData <- function(x){
   fullURL <- paste0(baseURL,x)
   GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
 }
+```
+
+Use the function above to return tibbles for the **franchise** data and **franchise-team-totals** data.  
+
+```{r overallData, echo=TRUE, eval=TRUE, message=FALSE}
+overallData(x="franchise")
+overallData(x="franchise-team-totals")
 ```
 
 The following function can be used to access **franchise-season-records**, **franchise-goalie-records**, and **franchise-skater-records** for a specified franchise ID. 
@@ -53,4 +60,12 @@ franchiseData <- function(x,ID){
   fullURL <- paste0(baseURL,x,"?cayenneExp=franchiseId=",ID)
   GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
 }
+```  
+
+Use the function above to return tibbles for the Capitals franchise (ID=24) for **franchise-season-records**, **franchise-goalie-records**, and **franchise-skater-records**.  
+
+```{r franchiseData, echo=TRUE, eval=TRUE, message=FALSE}
+franchiseData(x="franchise-season-records", ID="24")
+franchiseData(x="franchise-goalie-records", ID="24")
+franchiseData(x="franchise-skater-records", ID="24")
 ```
