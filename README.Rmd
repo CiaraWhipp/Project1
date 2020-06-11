@@ -17,7 +17,7 @@ library(DT)
 
 ### What is JSON and what is its use?  
 
-JavaScript Object Notation or [JSON](https://www.tutorialspoint.com/json/json_overview.htm#:~:text=JSON%20or%20JavaScript%20Object%20Notation,stands%20for%20JavaScript%20Object%20Notation.) is a text-based, data-interchangable format used to store and transport data. It is often used to transmit data between a server and web applications, and web services and APIs use JSON to provide data. We will explore JSON provided by an API in this document.  
+JavaScript Object Notation or [JSON](https://www.tutorialspoint.com/json/json_overview.htm#:~:text=JSON%20or%20JavaScript%20Object%20Notation,stands%20for%20JavaScript%20Object%20Notation.) is a text-based, data-interchangable format used to store and transport data. It is often used to transmit data between a server and web applications, and web services and APIs use JSON to provide data. We will see JSON provided by an API in this document.  
 
 ### Why use JSON?  
 
@@ -43,7 +43,10 @@ library(jsonlite)
 library(httr)
 overallData <- function(x){
   fullURL <- paste0(baseURL,x)
-  GET(fullURL) %>% content("text") %>% fromJSON(flatten=TRUE) %>% as_tibble()
+  GET(fullURL) %>% 
+    content("text") %>% 
+    fromJSON(flatten=TRUE) %>% 
+    as_tibble()
 }
 ```
 
@@ -54,12 +57,15 @@ overallData(x="franchise")
 overallData(x="franchise-team-totals")
 ```
 
-The following function can be used to access **franchise-season-records**, **franchise-goalie-records**, and **franchise-skater-records** for a specified franchise ID. 
+The following function can be used to access **franchise-season-records**, **franchise-goalie-records**, and **franchise-skater-records** for a specified franchise ID.  
 
 ```{r franchise, echo=TRUE, eval=TRUE, message=FALSE}
 franchiseData <- function(x,ID){
   fullURL <- paste0(baseURL,x,"?cayenneExp=franchiseId=",ID)
-  GET(fullURL) %>% content("text") %>% fromJSON(flatten=TRUE) %>% as_tibble()
+  GET(fullURL) %>% 
+    content("text") %>% 
+    fromJSON(flatten=TRUE) %>% 
+    as_tibble()
 }
 ```  
 
@@ -71,21 +77,32 @@ franchiseData(x="franchise-goalie-records", ID="24")
 franchiseData(x="franchise-skater-records", ID="24")
 ```
 
+## Creating New Variables  
+
 Create a new variable for the **franchise-skater-records** data for the Washington Capitals called goalsPerGame that gives the average number of goals per game by dividing `goals` by `gamesPlayed`. Return a table for the top 6 goals per game statistic.  
 
 ```{r goalsTable, echo=TRUE, eval=TRUE, message=FALSE}
-skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data %>% rename("Last Name"=lastName, "Position Code"=positionCode, "Number of Seasons Played"=seasons) %>%mutate("Goals per Game"=goals/gamesPlayed) %>% select(`Last Name`, `Position Code`, `Goals per Game`, `Number of Seasons Played`) %>% arrange(desc(`Goals per Game`))
-knitr::kable(head(skaterCaps))
+skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data %>% 
+  rename("Last Name"=lastName, "Position Code"=positionCode, "Number of Seasons Played"=seasons) %>%
+  mutate("Goals per Game"=goals/gamesPlayed) %>% 
+  select(`Last Name`, `Position Code`, `Goals per Game`, `Number of Seasons Played`) %>% 
+  arrange(desc(`Goals per Game`))
+knitr::kable(head(skaterCaps), digits=2)
 ```
 
-Continuing with the **franchise-skater-records** data for the Washington Capitals, create a contingency table that give the counts for each position code based on active status.
+## Numeric Summaries  
+
+### Contingency Tables  
+
+Continuing with the **franchise-skater-records** data for the Washington Capitals, create a contingency table that give the counts for each position code based on active status.  
 
 ```{r contigencyTable1, echo=TRUE, eval=TRUE, message=FALSE}
 skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data
-knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode), caption="Active Status and Position Code Information for the Capitals")
+knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode), 
+             caption="Active Status and Position Code Information for the Capitals")
 ```
 
-Change the values of `mostGoalsAgainstOneGame` to "Good/Fair Performance" for 4 or less goals, "Poor Performance" for 5-8 goals, and "Terrible Performance" for more than 8 goals, and change the values of `wins` to "Winning Goalie" for goalies with greater than or equal to 175 wins and to "Losing Goalie" for goalies with less than 175 wins. The contingency tables show Goalie Performance and Winning status for non-active and active Capitals' goalies.
+Using the **franchise-goalie-records** data for the Washington Capitals, change the values of `mostGoalsAgainstOneGame` to "Good/Fair Performance" for 4 or less goals, "Poor Performance" for 5-8 goals, and "Terrible Performance" for more than 8 goals, and change the values of `wins` to "Winning Goalie" for goalies with greater than or equal to 175 wins and to "Losing Goalie" for goalies with less than 175 wins. The contingency tables show Goalie Performance and Winning status for non-active and active Capitals' goalies.  
 
 ```{r contingencyTable2, echo=TRUE, eval=TRUE, message=FALSE}
 goalieData<-franchiseData(x="franchise-goalie-records", ID="24")$data
@@ -93,8 +110,37 @@ x<-goalieData$mostGoalsAgainstOneGame
 goalieData$mostGoalsAgainstOneGame <- ifelse(x<=4, "Good/Fair Performance",ifelse(x>8, "Terrible Performance", "Poor Performance"))
 y<-goalieData$wins
 goalieData$wins <- ifelse(y<175, "Losing Goalie","Winning Goalie")
-notActive <- goalieData %>% filter(activePlayer == FALSE)
-knitr::kable(table(notActive$mostGoalsAgainstOneGame, notActive$wins), caption="Goalie Performance and Winning Status for Non-Active Goalies")
-active <- goalieData %>% filter(activePlayer ==TRUE)
-knitr::kable(table(active$mostGoalsAgainstOneGame, active$wins), caption="Goalie Performance and Winning Status for Active Goalies")
+notActive <- goalieData %>% 
+  filter(activePlayer == FALSE)
+knitr::kable(table(notActive$mostGoalsAgainstOneGame, notActive$wins), 
+             caption="Goalie Performance and Winning Status for Non-Active Goalies")
+active <- goalieData %>% 
+  filter(activePlayer ==TRUE)
+knitr::kable(table(active$mostGoalsAgainstOneGame, active$wins), 
+             caption="Goalie Performance and Winning Status for Active Goalies")
+```
+
+### Summary Statistics Tables  
+
+The tables below give summary statisitics for non-active and active Capitals' goalies (minimum, 1st quantile, median, mean, 3rd quantile, and maximum) for `mostSavesOneGame`, `mostShotsAgainstOneGame`, `mostWinsOneSeason`, and `seasons`.  
+
+```{r summaryStats, echo=TRUE, eval=TRUE, message=FALSE}
+notActive <- notActive %>%
+  select(mostSavesOneGame, mostShotsAgainstOneGame,
+         mostWinsOneSeason, seasons) %>%
+  rename("Most Saves in 1 Game"=mostSavesOneGame, 
+         "Most Shots Against in 1 Game"=mostShotsAgainstOneGame, 
+         "Most Wins in 1 Season"=mostWinsOneSeason,
+         "Seasons"=seasons)
+knitr::kable(apply(notActive,2,summary), digits=1,
+             caption="Summary of Non-Active Capitals' Goalies")
+active <- active %>%
+    select(mostSavesOneGame, mostShotsAgainstOneGame,
+         mostWinsOneSeason, seasons) %>%
+    rename("Most Saves in 1 Game"=mostSavesOneGame, 
+         "Most Shots Against in 1 Game"=mostShotsAgainstOneGame, 
+         "Most Wins in 1 Season"=mostWinsOneSeason,
+         "Seasons"=seasons)
+knitr::kable(apply(active,2,summary), 
+             caption="Summary of Active Capitals' Goalies")
 ```
