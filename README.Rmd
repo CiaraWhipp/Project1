@@ -155,7 +155,7 @@ Using the `goalieData` from the tables above, create various types of plots to v
 
 The bar plots below represent the counts of non-active and active goalies, of goalie perforamance, and winning status, respectively.  
 
-```{r barPlots, echo=TRUE, eval=TRUE, message=FALSE}
+```{r barPlots1, echo=TRUE, eval=TRUE, message=FALSE}
 g <- ggplot(goalieData)
 g + geom_bar(aes(x=activePlayer)) + 
   labs(x="Player Active")
@@ -167,7 +167,20 @@ g + geom_bar(aes(x=wins)) +
 
 #### Two Variable Side-by-Side Bar Plots  
 
-#### Three Variable Bar Plot  
+The first bar plot is a visual representation of the number of active and non-active goalies for each Goal Performance category. The second bar plot is a visual respresentation fo the number of active and non-active goalies for Winning Goalies and Losing Goalies.
+
+```{r barPlots2, echo=TRUE, eval=TRUE, message=FALSE}
+g + geom_bar(aes(x=mostGoalsAgainstOneGame, fill=as.factor(activePlayer)),
+             position="dodge") +
+  labs(x="Goalie Performance") +
+  scale_fill_discrete(name="Active Player")
+g + geom_bar(aes(x=wins, fill=as.factor(activePlayer)),
+             position="dodge") +
+  labs(x="Winning Status") +
+  scale_fill_discrete(name="Active Player")
+```
+
+#### Three Variable Side-by-Sdie Bar Plot  
 
 ### Box Plots  
 

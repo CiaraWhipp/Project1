@@ -376,25 +376,49 @@ g + geom_bar(aes(x=activePlayer)) +
   labs(x="Player Active")
 ```
 
-![](README_files/figure-gfm/barPlots-1.png)<!-- -->
+![](README_files/figure-gfm/barPlots1-1.png)<!-- -->
 
 ``` r
 g + geom_bar(aes(x=mostGoalsAgainstOneGame)) + 
   labs(x="Goalie Performance")
 ```
 
-![](README_files/figure-gfm/barPlots-2.png)<!-- -->
+![](README_files/figure-gfm/barPlots1-2.png)<!-- -->
 
 ``` r
 g + geom_bar(aes(x=wins)) +
   labs(x="Winning Status")
 ```
 
-![](README_files/figure-gfm/barPlots-3.png)<!-- -->
+![](README_files/figure-gfm/barPlots1-3.png)<!-- -->
 
 #### Two Variable Side-by-Side Bar Plots
 
-#### Three Variable Bar Plot
+The first bar plot is a visual representation of the number of active
+and non-active goalies for each Goal Performance category. The second
+bar plot is a visual respresentation fo the number of active and
+non-active goalies for Winning Goalies and Losing
+Goalies.
+
+``` r
+g + geom_bar(aes(x=mostGoalsAgainstOneGame, fill=as.factor(activePlayer)),
+             position="dodge") +
+  labs(x="Goalie Performance") +
+  scale_fill_discrete(name="Active Player")
+```
+
+![](README_files/figure-gfm/barPlots2-1.png)<!-- -->
+
+``` r
+g + geom_bar(aes(x=wins, fill=as.factor(activePlayer)),
+             position="dodge") +
+  labs(x="Winning Status") +
+  scale_fill_discrete(name="Active Player")
+```
+
+![](README_files/figure-gfm/barPlots2-2.png)<!-- -->
+
+#### Three Variable Side-by-Sdie Bar Plot
 
 ### Box Plots
 
