@@ -420,6 +420,15 @@ g + geom_bar(aes(x=wins, fill=as.factor(activePlayer)),
 
 #### Three Variable Side-by-Sdie Bar Plot
 
+``` r
+g + geom_bar(aes(x=activePlayer, fill=as.factor(wins)), position="dodge") +
+  labs(x="Active Player") +
+  scale_fill_discrete("Winning Status") +
+  facet_wrap(~ mostGoalsAgainstOneGame)
+```
+
+![](README_files/figure-gfm/boxPlots3-1.png)<!-- -->
+
 ### Box Plots
 
 ### Scatter Plots
