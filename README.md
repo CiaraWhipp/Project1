@@ -234,10 +234,50 @@ position code based on active status.
 
 ``` r
 skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data
-knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode))
+knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode), caption="Active Status and Position Code Information for the Capitals")
 ```
 
 |       |   C |   D |  L |  R |
 | ----- | --: | --: | -: | -: |
 | FALSE | 108 | 159 | 91 | 99 |
 | TRUE  |  12 |  19 | 12 |  9 |
+
+Active Status and Position Code Information for the Capitals
+
+Change the values of `mostGoalsAgainstOneGame` to “Good/Fair
+Performance” for 4 or less goals, “Poor Performance” for 5-8 goals,
+and “Terrible Performance” for more than 8 goals, and change the values
+of `wins` to “Winning Goalie” for goalies with greater than or equal to
+175 wins and to “Losing Goalie” for goalies with less than 175 wins. The
+contingency tables show Goalie Performance and Winning status for
+non-active and active Capitals’ goalies.
+
+``` r
+goalieData<-franchiseData(x="franchise-goalie-records", ID="24")$data
+x<-goalieData$mostGoalsAgainstOneGame
+goalieData$mostGoalsAgainstOneGame <- ifelse(x<=4, "Good/Fair Performance",ifelse(x>8, "Terrible Performance", "Poor Performance"))
+y<-goalieData$wins
+goalieData$wins <- ifelse(y<175, "Losing Goalie","Winning Goalie")
+notActive <- goalieData %>% filter(activePlayer == FALSE)
+knitr::kable(table(notActive$mostGoalsAgainstOneGame, notActive$wins), caption="Goalie Performance and Winning Status for Non-Active Goalies")
+```
+
+|                       | Losing Goalie | Winning Goalie |
+| --------------------- | ------------: | -------------: |
+| Good/Fair Performance |             5 |              0 |
+| Poor Performance      |            17 |              1 |
+| Terrible Performance  |             4 |              0 |
+
+Goalie Performance and Winning Status for Non-Active Goalies
+
+``` r
+active <- goalieData %>% filter(activePlayer ==TRUE)
+knitr::kable(table(active$mostGoalsAgainstOneGame, active$wins), caption="Goalie Performance and Winning Status for Active Goalies")
+```
+
+|                       | Losing Goalie | Winning Goalie |
+| --------------------- | ------------: | -------------: |
+| Good/Fair Performance |             1 |              0 |
+| Poor Performance      |             1 |              1 |
+
+Goalie Performance and Winning Status for Active Goalies

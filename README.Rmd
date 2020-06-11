@@ -80,7 +80,21 @@ knitr::kable(head(skaterCaps))
 
 Continuing with the **franchise-skater-records** data for the Washington Capitals, create a contingency table that give the counts for each position code based on active status.
 
-```{r contigencyTables, echo=TRUE, eval=TRUE, message=FALSE}
+```{r contigencyTable1, echo=TRUE, eval=TRUE, message=FALSE}
 skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data
-knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode))
+knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode), caption="Active Status and Position Code Information for the Capitals")
+```
+
+Change the values of `mostGoalsAgainstOneGame` to "Good/Fair Performance" for 4 or less goals, "Poor Performance" for 5-8 goals, and "Terrible Performance" for more than 8 goals, and change the values of `wins` to "Winning Goalie" for goalies with greater than or equal to 175 wins and to "Losing Goalie" for goalies with less than 175 wins. The contingency tables show Goalie Performance and Winning status for non-active and active Capitals' goalies.
+
+```{r contingencyTable2, echo=TRUE, eval=TRUE, message=FALSE}
+goalieData<-franchiseData(x="franchise-goalie-records", ID="24")$data
+x<-goalieData$mostGoalsAgainstOneGame
+goalieData$mostGoalsAgainstOneGame <- ifelse(x<=4, "Good/Fair Performance",ifelse(x>8, "Terrible Performance", "Poor Performance"))
+y<-goalieData$wins
+goalieData$wins <- ifelse(y<175, "Losing Goalie","Winning Goalie")
+notActive <- goalieData %>% filter(activePlayer == FALSE)
+knitr::kable(table(notActive$mostGoalsAgainstOneGame, notActive$wins), caption="Goalie Performance and Winning Status for Non-Active Goalies")
+active <- goalieData %>% filter(activePlayer ==TRUE)
+knitr::kable(table(active$mostGoalsAgainstOneGame, active$wins), caption="Goalie Performance and Winning Status for Active Goalies")
 ```
