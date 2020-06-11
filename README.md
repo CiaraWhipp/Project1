@@ -264,9 +264,10 @@ Active Status and Position Code Information for the Capitals
 Using the **franchise-goalie-records** data for the Washington Capitals,
 change the values of `mostGoalsAgainstOneGame` to “Good/Fair
 Performance” for 4 or less goals, “Poor Performance” for 5-8 goals,
-and “Terrible Performance” for more than 8 goals, and change the values
-of `wins` to “Winning Goalie” for goalies with greater than or equal to
-175 wins and to “Losing Goalie” for goalies with less than 175 wins. The
+and “Terrible Performance” for more than 8 goals to represent Goalie
+Performance, and change the values of `wins` to “Winning Goalie” for
+goalies with greater than or equal to 175 wins and to “Losing Goalie”
+for goalies with less than 175 wins to represent Winnning Status. The
 contingency tables show Goalie Performance and Winning status for
 non-active and active Capitals’ goalies.
 
@@ -356,3 +357,45 @@ knitr::kable(apply(active,2,summary),
 | Max.    |                 46.0 |                         47.0 |                  48.0 |    10.0 |
 
 Summary of Active Capitals’ Goalies
+
+## Visuals
+
+Using the `goalieData` from the tables above, create various types of
+plots to visualize the data.
+
+### Bar Plots
+
+#### One Variable Bar Plots
+
+The bar plots below represent the counts of non-active and active
+goalies, of goalie perforamance, and winning status, respectively.
+
+``` r
+g <- ggplot(goalieData)
+g + geom_bar(aes(x=activePlayer)) + 
+  labs(x="Player Active")
+```
+
+![](README_files/figure-gfm/barPlots-1.png)<!-- -->
+
+``` r
+g + geom_bar(aes(x=mostGoalsAgainstOneGame)) + 
+  labs(x="Goalie Performance")
+```
+
+![](README_files/figure-gfm/barPlots-2.png)<!-- -->
+
+``` r
+g + geom_bar(aes(x=wins)) +
+  labs(x="Winning Status")
+```
+
+![](README_files/figure-gfm/barPlots-3.png)<!-- -->
+
+#### Two Variable Side-by-Side Bar Plots
+
+#### Three Variable Bar Plot
+
+### Box Plots
+
+### Scatter Plots
