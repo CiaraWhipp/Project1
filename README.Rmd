@@ -10,8 +10,7 @@ output:
 ```{r setup, include=FALSE, message=FALSE, error=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(httr)
-library(jsonlite)
+library(DT)
 ```
 
 ## Introduction to JSON Data  
@@ -37,12 +36,14 @@ The following code creates the base url that can be used to read in data from th
 baseURL <- "https://records.nhl.com/site/api/"
 ```
 
-The following function can be used to access the **franchise** data and **franchise-team-totals** data. Both data sets can be found below
+The following function can be used to access the **franchise** data and **franchise-team-totals** data. Note the `jsonlite` and `httr` packages are required to utilize this function.  
 
 ```{r overall, echo=TRUE, eval=TRUE, message=FALSE}
+library(jsonlite)
+library(httr)
 overallData <- function(x){
   fullURL <- paste0(baseURL,x)
-  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
+  GET(fullURL) %>% content("text") %>% fromJSON(flatten=TRUE) %>% as_tibble()
 }
 ```
 
@@ -58,7 +59,7 @@ The following function can be used to access **franchise-season-records**, **fra
 ```{r franchise, echo=TRUE, eval=TRUE, message=FALSE}
 franchiseData <- function(x,ID){
   fullURL <- paste0(baseURL,x,"?cayenneExp=franchiseId=",ID)
-  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
+  GET(fullURL) %>% content("text") %>% fromJSON(flatten=TRUE) %>% as_tibble()
 }
 ```  
 
@@ -68,4 +69,11 @@ Use the function above to return tibbles for the Capitals franchise (ID=24) for 
 franchiseData(x="franchise-season-records", ID="24")
 franchiseData(x="franchise-goalie-records", ID="24")
 franchiseData(x="franchise-skater-records", ID="24")
+```
+
+Create a new variable for the **franchise-skater-records** data for the Washington Capitals called goalsPerGame that gives the average number of goals per game by dividing `goals` by `gamesPlayed`. Return a table for the top 6 goals per game statistic.
+
+```{r goalsTable, echo=TRUE, eval=TRUE, message=FALSE}
+skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data %>% rename("Last Name"=lastName, "Position Code"=positionCode, "Number of Seasons Played"=seasons) %>%mutate("Goals per Game"=goals/gamesPlayed) %>% select(`Last Name`, `Position Code`, `Goals per Game`, `Number of Seasons Played`) %>% arrange(desc(`Goals per Game`))
+knitr::kable(head(skaterCaps))
 ```

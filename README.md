@@ -47,12 +47,15 @@ baseURL <- "https://records.nhl.com/site/api/"
 ```
 
 The following function can be used to access the **franchise** data and
-**franchise-team-totals** data. Both data sets can be found below
+**franchise-team-totals** data. Note the `jsonlite` and `httr` packages
+are required to utilize this function.
 
 ``` r
+library(jsonlite)
+library(httr)
 overallData <- function(x){
   fullURL <- paste0(baseURL,x)
-  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
+  GET(fullURL) %>% content("text") %>% fromJSON(flatten=TRUE) %>% as_tibble()
 }
 ```
 
@@ -111,7 +114,7 @@ The following function can be used to access
 ``` r
 franchiseData <- function(x,ID){
   fullURL <- paste0(baseURL,x,"?cayenneExp=franchiseId=",ID)
-  GET(fullURL) %>% content("text") %>% fromJSON() %>% as_tibble()
+  GET(fullURL) %>% content("text") %>% fromJSON(flatten=TRUE) %>% as_tibble()
 }
 ```
 
@@ -204,3 +207,23 @@ franchiseData(x="franchise-skater-records", ID="24")
     ## #   $mostPointsOneSeason <int>, $mostPointsSeasonIds <chr>,
     ## #   $penaltyMinutes <int>, $playerId <int>, $points <int>, $positionCode <chr>,
     ## #   $rookiePoints <int>, $seasons <int>, total <int>
+
+Create a new variable for the **franchise-skater-records** data for the
+Washington Capitals called goalsPerGame that gives the average number of
+goals per game by dividing `goals` by `gamesPlayed`. Return a table for
+the top 6 goals per game
+statistic.
+
+``` r
+skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data %>% rename("Last Name"=lastName, "Position Code"=positionCode, "Number of Seasons Played"=seasons) %>%mutate("Goals per Game"=goals/gamesPlayed) %>% select(`Last Name`, `Position Code`, `Goals per Game`, `Number of Seasons Played`) %>% arrange(desc(`Goals per Game`))
+knitr::kable(head(skaterCaps))
+```
+
+| Last Name  | Position Code | Goals per Game | Number of Seasons Played |
+| :--------- | :------------ | -------------: | -----------------------: |
+| Ovechkin   | L             |      0.6128472 |                       15 |
+| Berezin    | L             |      0.5555556 |                        1 |
+| Maruk      | C             |      0.5306122 |                        5 |
+| Gartner    | R             |      0.5237467 |                       10 |
+| Ciccarelli | R             |      0.5022422 |                        4 |
+| Carlson    | D             |      0.5000000 |                        1 |
