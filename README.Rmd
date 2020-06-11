@@ -71,9 +71,16 @@ franchiseData(x="franchise-goalie-records", ID="24")
 franchiseData(x="franchise-skater-records", ID="24")
 ```
 
-Create a new variable for the **franchise-skater-records** data for the Washington Capitals called goalsPerGame that gives the average number of goals per game by dividing `goals` by `gamesPlayed`. Return a table for the top 6 goals per game statistic.
+Create a new variable for the **franchise-skater-records** data for the Washington Capitals called goalsPerGame that gives the average number of goals per game by dividing `goals` by `gamesPlayed`. Return a table for the top 6 goals per game statistic.  
 
 ```{r goalsTable, echo=TRUE, eval=TRUE, message=FALSE}
 skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data %>% rename("Last Name"=lastName, "Position Code"=positionCode, "Number of Seasons Played"=seasons) %>%mutate("Goals per Game"=goals/gamesPlayed) %>% select(`Last Name`, `Position Code`, `Goals per Game`, `Number of Seasons Played`) %>% arrange(desc(`Goals per Game`))
 knitr::kable(head(skaterCaps))
+```
+
+Continuing with the **franchise-skater-records** data for the Washington Capitals, create a contingency table that give the counts for each position code based on active status.
+
+```{r contigencyTables, echo=TRUE, eval=TRUE, message=FALSE}
+skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data
+knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode))
 ```

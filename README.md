@@ -227,3 +227,17 @@ knitr::kable(head(skaterCaps))
 | Gartner    | R             |      0.5237467 |                       10 |
 | Ciccarelli | R             |      0.5022422 |                        4 |
 | Carlson    | D             |      0.5000000 |                        1 |
+
+Continuing with the **franchise-skater-records** data for the Washington
+Capitals, create a contingency table that give the counts for each
+position code based on active status.
+
+``` r
+skaterCaps <- franchiseData(x="franchise-skater-records", ID="24")$data
+knitr::kable(table(skaterCaps$activePlayer, skaterCaps$positionCode))
+```
+
+|       |   C |   D |  L |  R |
+| ----- | --: | --: | -: | -: |
+| FALSE | 108 | 159 | 91 | 99 |
+| TRUE  |  12 |  19 | 12 |  9 |
