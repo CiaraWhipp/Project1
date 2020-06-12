@@ -223,7 +223,7 @@ The following scatter shows the relationship between Number of Seasons Played an
 ```{r scatterPlots1, echo=TRUE, eval=TRUE, message=FALSE}
 g <- ggplot(goalieData, aes(x=seasons, y=mostWinsOneSeason))
 g + geom_point(aes(color=wins)) +
-  scale_color_discrete(name="Winning Status")
+  scale_color_discrete(name="Winning Status") +
   labs(x="Number of Seasons Played", y="Most Wins in 1 Season")
 ```
 

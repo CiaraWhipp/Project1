@@ -475,23 +475,11 @@ Goalies.
 ``` r
 g <- ggplot(goalieData, aes(x=seasons, y=mostWinsOneSeason))
 g + geom_point(aes(color=wins)) +
-  scale_color_discrete(name="Winning Status")
-```
-
-![](README_files/figure-gfm/scatterPlots1-1.png)<!-- -->
-
-``` r
+  scale_color_discrete(name="Winning Status") +
   labs(x="Number of Seasons Played", y="Most Wins in 1 Season")
 ```
 
-    ## $x
-    ## [1] "Number of Seasons Played"
-    ## 
-    ## $y
-    ## [1] "Most Wins in 1 Season"
-    ## 
-    ## attr(,"class")
-    ## [1] "labels"
+![](README_files/figure-gfm/scatterPlots1-1.png)<!-- -->
 
 The following scatter plot shows the relationship between Most Shots
 Against in 1 Game and Most Saves in 1 Game for Active and Non-Active
