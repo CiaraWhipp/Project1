@@ -367,8 +367,8 @@ plots to visualize the data.
 
 #### One Variable Bar Plots
 
-The bar plots below represent the counts of non-active and active
-goalies, of goalie perforamance, and winning status, respectively.
+The bar plots below represent the counts of Non-active and Active
+Goalies, of Goalie Perforamance, and Winning Status, respectively.
 
 ``` r
 g <- ggplot(goalieData)
@@ -394,8 +394,8 @@ g + geom_bar(aes(x=wins)) +
 
 #### Two Variable Side-by-Side Bar Plots
 
-The first bar plot is a visual representation of the number of active
-and non-active goalies for each Goal Performance category. The second
+The first bar plot is a visual representation of the number of Active
+and Non-Active Goalies for each Goal Performance category. The second
 bar plot is a visual respresentation fo the number of active and
 non-active goalies for Winning Goalies and Losing
 Goalies.
@@ -418,7 +418,12 @@ g + geom_bar(aes(x=wins, fill=as.factor(activePlayer)),
 
 ![](README_files/figure-gfm/barPlots2-2.png)<!-- -->
 
-#### Three Variable Side-by-Sdie Bar Plot
+#### Three Variable Side-by-Side Bar Plot
+
+The following bar plots give a visual representation of the number of
+Winning Goalies and Losing Goalies for Active and Non-Active Goalies for
+each Goalie Performance
+category.
 
 ``` r
 g + geom_bar(aes(x=activePlayer, fill=as.factor(wins)), position="dodge") +
@@ -427,8 +432,38 @@ g + geom_bar(aes(x=activePlayer, fill=as.factor(wins)), position="dodge") +
   facet_wrap(~ mostGoalsAgainstOneGame)
 ```
 
-![](README_files/figure-gfm/boxPlots3-1.png)<!-- -->
+![](README_files/figure-gfm/barPlots3-1.png)<!-- -->
 
 ### Box Plots
+
+The following box plot gives visual representation and comparison of the
+summary statistics for Most Saves in One Game for Active and Non-Active
+Goalies.
+
+``` r
+g <- ggplot(goalieData, aes(x=activePlayer, y=mostSavesOneGame))
+g + geom_boxplot() +
+  geom_point(aes(x=activePlayer, y=mostSavesOneGame,
+                 color=activePlayer),position="jitter") +
+  scale_color_discrete(name="Active Player") +
+  labs(x="Active Player", y="Most Saves in 1 Game")
+```
+
+![](README_files/figure-gfm/boxPlots1-1.png)<!-- -->
+
+The following box plot gives visual representation and comparison of the
+summary statistics for Most Wins in One Season for Winning Goalies and
+Losing Goalies.
+
+``` r
+g <- ggplot(goalieData, aes(x=wins, y=mostWinsOneSeason))
+g + geom_boxplot() +
+  geom_point(aes(x=wins, y=mostWinsOneSeason,
+                 color=wins),position="jitter") +
+  scale_color_discrete(name="Winning Status") +
+  labs(x="Winning Status", y="Most Wins in 1 Season")
+```
+
+![](README_files/figure-gfm/boxPlots2-1.png)<!-- -->
 
 ### Scatter Plots
