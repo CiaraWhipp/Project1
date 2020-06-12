@@ -467,3 +467,42 @@ g + geom_boxplot() +
 ![](README_files/figure-gfm/boxPlots2-1.png)<!-- -->
 
 ### Scatter Plots
+
+The following scatter shows the relationship between Number of Seasons
+Played and Most Wins in 1 Season for both Winning Goalies and Losing
+Goalies.
+
+``` r
+g <- ggplot(goalieData, aes(x=seasons, y=mostWinsOneSeason))
+g + geom_point(aes(color=wins)) +
+  scale_color_discrete(name="Winning Status")
+```
+
+![](README_files/figure-gfm/scatterPlots1-1.png)<!-- -->
+
+``` r
+  labs(x="Number of Seasons Played", y="Most Wins in 1 Season")
+```
+
+    ## $x
+    ## [1] "Number of Seasons Played"
+    ## 
+    ## $y
+    ## [1] "Most Wins in 1 Season"
+    ## 
+    ## attr(,"class")
+    ## [1] "labels"
+
+The following scatter plot shows the relationship between Most Shots
+Against in 1 Game and Most Saves in 1 Game for Active and Non-Active
+Goalies.
+
+``` r
+g <- ggplot(goalieData, aes(x=mostShotsAgainstOneGame, y=mostSavesOneGame))
+g + geom_point(aes(color=activePlayer)) +
+  geom_smooth(aes(group=activePlayer), color="green", method=lm, lwd=.5) +
+  scale_color_discrete(name="Active Player") +
+  labs(x="Most Shots Against in 1 Game", y="Most Saves in One Game")
+```
+
+![](README_files/figure-gfm/scatterPlots2-1.png)<!-- -->
