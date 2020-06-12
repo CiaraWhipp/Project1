@@ -2,9 +2,10 @@
 title: "Project 1"
 author: "Ciara Whipp"
 date: "6/10/2020"
-output: 
+output:
   rmarkdown::github_document:
     toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE, message=FALSE, error=FALSE}
